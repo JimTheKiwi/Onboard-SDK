@@ -19,32 +19,23 @@
 # * SOFTWARE.
 # *
 # *
-
 cmake_minimum_required(VERSION 2.8)
-project(djiosdk-advanced-sensing-sample)
+project(djiosdk-payload-control-sample)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -pthread -g -O0")
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ONBOARDSDK_SOURCE}/cmake-modules/")
-
-find_package(LibUSB REQUIRED)
-include_directories(${LIBUSB_1_INCLUDE_DIRS})
-
-set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../common)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
 include_directories(${ONBOARDSDK_SOURCE}/api/inc)
 include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
 include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
 include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
 include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
-include_directories(${HELPER_FUNCTIONS_DIR})
 
-add_subdirectory(stereo_vision_single_thread_sample)
-add_subdirectory(stereo_vision_multi_thread_sample)
-add_subdirectory(camera_stream_poll_sample)
-add_subdirectory(camera_stream_callback_sample)
-add_subdirectory(stereo_vision_depth_perception_sample)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 
-if (TARGET_TRACKING_SAMPLE)
-  add_subdirectory(camera_stream_target_tracking_sample)
-endif()
+FILE(GLOB SOURCE_FILES *.hpp *.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+        )
+
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+target_link_libraries(${PROJECT_NAME} djiosdk-core)
